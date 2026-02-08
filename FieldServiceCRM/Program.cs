@@ -31,7 +31,9 @@ builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IInvoiceService, InvoiceService>();
 builder.Services.AddScoped<ITechnicianService, TechnicianService>();
-
+// Listen on Railway's port
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 var app = builder.Build();
 
 // Configure the HTTP request pipeline

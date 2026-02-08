@@ -1,0 +1,6 @@
+[build]
+builder = "nixpacks"
+buildCommand = "cd FieldServiceCRM && dotnet publish -c Release -o out"
+
+[deploy]
+startCommand = "cd FieldServiceCRM/out && dotnet FieldServiceCRM.dll"
