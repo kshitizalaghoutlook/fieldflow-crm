@@ -1,8 +1,11 @@
 [phases.setup]
 nixPkgs = ["dotnet-sdk_8"]
 
+[phases.install]
+cmds = ["cd FieldServiceCRM && dotnet restore"]
+
 [phases.build]
-cmds = ["cd FieldServiceCRM && dotnet restore && dotnet publish -c Release -o out"]
+cmds = ["cd FieldServiceCRM && dotnet publish -c Release -o out"]
 
 [start]
-cmd = "cd FieldServiceCRM/out && dotnet FieldServiceCRM.dll --urls http://0.0.0.0:8080"
+cmd = "cd FieldServiceCRM/out && dotnet FieldServiceCRM.dll --urls http://0.0.0.0:$PORT"

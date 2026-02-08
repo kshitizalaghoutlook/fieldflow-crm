@@ -3,7 +3,12 @@ using FieldServiceCRM.Data;
 using FieldServiceCRM.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-
+// Configure for Railway deployment
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5001";
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.ListenAnyIP(int.Parse(port));
+});
 // Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
