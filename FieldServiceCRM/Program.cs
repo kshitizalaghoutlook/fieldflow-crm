@@ -3,19 +3,20 @@ using FieldServiceCRM.Data;
 using FieldServiceCRM.Services;
 
 var builder = WebApplication.CreateBuilder(args);
-// Configure for Railway deployment
+
+// 1. Configure for Railway deployment (Consolidated)
 var port = Environment.GetEnvironmentVariable("PORT") ?? "5001";
 builder.WebHost.ConfigureKestrel(options =>
 {
     options.ListenAnyIP(int.Parse(port));
 });
+
 // Add services to the container
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Database context
-// Using SQLite for easier deployment (no SQL Server required)
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? "Data Source=fieldservice.db";
 builder.Services.AddDbContext<CrmDbContext>(options =>
     options.UseSqlite(connectionString));
@@ -36,9 +37,9 @@ builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IJobService, JobService>();
 builder.Services.AddScoped<IInvoiceService, InvoiceService>();
 builder.Services.AddScoped<ITechnicianService, TechnicianService>();
-// Listen on Railway's port
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
+// Removed the duplicate 'var port' and UseUrls call here
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline
@@ -48,6 +49,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Note: If Railway handles SSL termination for you, 
+// you might sometimes need to disable UseHttpsRedirection in production.
 app.UseHttpsRedirection();
 app.UseCors("ReactApp");
 app.UseAuthorization();
